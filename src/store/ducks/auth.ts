@@ -29,6 +29,7 @@ export default (state: AuthState = initialState, action: PayloadAction) => {
 export interface AuthenticatePayload {
   user: string;
   password: string;
+  history: any;
 }
 
 export const authenticate = (payload: AuthenticatePayload) => ({

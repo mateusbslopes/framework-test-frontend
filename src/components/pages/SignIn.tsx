@@ -12,6 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch } from "react-redux";
 import { authenticate } from "../../store/ducks/auth";
+import { useHistory } from "react-router";
 
 function Copyright() {
   return (
@@ -63,12 +64,13 @@ export default function SignIn() {
   const classes = useStyles();
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const onSubmit = () => {
-    dispatch(authenticate({ user: email, password }));
+    dispatch(authenticate({ user: email, password, history }));
   };
 
   return (
