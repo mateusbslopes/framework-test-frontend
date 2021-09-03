@@ -6,17 +6,23 @@ export enum Types {
   AUTHENTICATE_FAILED = "AUTHENTICATE_FAILED",
 }
 
+const TOKEN_LOCALS_STORAGE_KEY = "frameworkTest";
+
 interface AuthState {
-  token?: string;
+  token: string | null;
 }
 
 const initialState: AuthState = {
-  token: undefined,
+  token: localStorage.getItem(TOKEN_LOCALS_STORAGE_KEY),
 };
 
-export default (state: AuthState = initialState, action: PayloadAction) => {
+export default (
+  state: AuthState = initialState,
+  action: PayloadAction<any>
+) => {
   switch (action.type) {
     case Types.AUTHENTICATE_SUCCESS:
+      localStorage.setItem(TOKEN_LOCALS_STORAGE_KEY, action.payload);
       return {
         ...state,
         token: action.payload,
