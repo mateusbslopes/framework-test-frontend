@@ -1,27 +1,31 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { Product } from "../../types";
+import { Cart, Product } from "../../types";
 
 export enum Types {
-  FETCH = "PRODUCTS_FETCH",
-  FETCH_SUCCESS = "PRODUCTS_FETCH_SUCCESS",
-  FETCH_FAILED = "PRODUCTS_FETCH_FAILED",
+  FETCH = "CART_FETCH",
+  FETCH_SUCCESS = "CART_FETCH_SUCCESS",
+  FETCH_FAILED = "CART_FETCH_FAILED",
+  PUT_PRODUCT = "CART_PUT_PRODUCT", // PUT related to http action so can either update or create.
+  SET_PRODUCTS = "CART_SET_PRODUCTS",
 }
 
-interface ProductsState {
-  list: Product[];
+export const CART_DATA_KEY = "frameworkTest_CART";
+
+interface CartState {
+  data: Cart;
   loading: boolean;
   error: string;
 }
 
-const initialState: ProductsState = {
-  list: [],
+const initialState: CartState = {
+  data: {},
   loading: false,
   error: "",
 };
 
 export default (
-  state: ProductsState = initialState,
-  { type, payload }: PayloadAction
+  state: CartState = initialState,
+  { type, payload }: PayloadAction | any
 ) => {
   switch (type) {
     case Types.FETCH:
@@ -35,27 +39,31 @@ export default (
         ...state,
         loading: false,
         error: "",
-        list: payload,
+        data: payload,
       };
     case Types.FETCH_FAILED:
       return {
         ...state,
         loading: false,
         error: payload,
-        list: [],
+        data: {},
+      };
+    case Types.PUT_PRODUCT:
+        const {id, amount} = payload;
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          [id]: { amount },
+        },
       };
     default:
       return state;
   }
 };
 
-export interface FetchPayload {
-  search: string;
-}
-
-export const fetch = (payload: FetchPayload) => ({
+export const fetch = () => ({
   type: Types.FETCH,
-  payload,
 });
 
 export interface FetchSuccessPayload {
